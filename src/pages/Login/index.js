@@ -1,11 +1,20 @@
 import './index.scss'
-import { Card, Form, Input, Button } from 'antd'
+import { Card, Form, Input, Button, message } from 'antd'
 import logo from '@/assets/logo.png'
+import { useDispatch } from 'react-redux'
+import { fetchLogin } from '@/store/modules/user'
+import { useNavigate } from 'react-router-dom'
 
 
 const Login = () => {
-    const onFinish = (value) => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const onFinish = async (value) => {
         console.log(value)
+        await dispatch(fetchLogin(value))
+        navigate('/')
+        message.success("登入成功")
+        //這個後端驗證的驗證碼必須使用驗證碼 ：246810
     }
 
     return (
@@ -22,7 +31,7 @@ const Login = () => {
                     message: '請輸入手機號'
                 },
                 {
-                    pattern:/^09\d{8}$/,
+                    pattern:/^13\d{9}$/,
                     message: '請輸入正確手機號'
                 }
               ]}
