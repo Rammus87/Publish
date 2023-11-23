@@ -55,7 +55,6 @@ const onConfirm = () => {
     navigate('/login')
 }
 
-
   return (
     <Layout>
       <Header className="header">
@@ -74,7 +73,7 @@ const onConfirm = () => {
           <Menu
             mode="inline"
             theme="dark"
-            SelectedKeys={selectedKey}
+            // SelectedKeys={selectedKey}
             items={items}
             style={{ height: '100%', borderRight: 0 }}
             onClick={onMenuClick}

@@ -1,31 +1,13 @@
-import * as echarts from 'echarts';
-import { useEffect, useRef } from 'react';
+import BarChart from "./components/BarChart"
 
 
 const Home = () => {
-    const chartRef = useRef(null)
-    useEffect(()=>{
-        
-        const chartDom = chartRef.current;
-        const myChart = echarts.init(chartDom);
-        const option = {
-          xAxis: {
-            type: 'category',
-            data: ['Html','Css','Javascript','Vue','Angular','React']
-          },
-          yAxis: {
-            type: 'value'
-          },
-          series: [
-            {
-              data: [100,70,80,20, 1, 80],
-              type: 'bar'
-            }
-          ]
-        };
-        option && myChart.setOption(option);
-    },[])
-    return <div><div ref={chartRef} style={{height:"400px" , width:"500px"}}></div></div>
+    return (
+      <div>
+        <BarChart title={'前端三劍客熟練度'} xdata={['Html','Css','JavaScript']} seriesdata={[90, 70, 80]} />
+        <BarChart title={'前端三大框架熟練度'} xdata={['Vue','Angular','React']} seriesdata={[20, 5, 80]} />
+        </div>
+    )
 }
 
 export default Home
