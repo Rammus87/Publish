@@ -73,7 +73,7 @@ const onConfirm = () => {
           <Menu
             mode="inline"
             theme="dark"
-            // SelectedKeys={selectedKey}
+            SelectedKeys={selectedKey}
             items={items}
             style={{ height: '100%', borderRight: 0 }}
             onClick={onMenuClick}

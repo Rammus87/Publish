@@ -6,6 +6,9 @@ import locale from 'antd/es/date-picker/locale/zh_CN'
 import { Table, Tag, Space } from 'antd'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import img404 from '@/assets/logo.png'
+import { useChannel } from '@/hooks/useChanel'
+import { useEffect, useState } from 'react'
+import { getArtcleListAPI } from '@/apis/article'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
@@ -13,6 +16,12 @@ const { RangePicker } = DatePicker
 
 
 const Article = () => {
+    const{ channelList } = useChannel()
+    const status = {
+        1:<Tag color="warning">待審核</Tag>,
+        2:<Tag color="success">審核通過</Tag>
+    }
+
     const columns = [
         {
           title: '封面',
@@ -30,7 +39,7 @@ const Article = () => {
         {
           title: '狀態',
           dataIndex: 'status',
-          render: data => <Tag color="green">審核通過</Tag>
+          render: data => status[data]
         },
         {
           title: '發布時間',
@@ -81,6 +90,32 @@ const Article = () => {
         }
       ]
 
+  const [list , setList] = useState([])
+  const [count , setCount] = useState(0)
+  useEffect(()=>{
+    async function getList(){
+      const res = await getArtcleListAPI()
+      setList(res.data.results)
+      setCount(res.data.total_count)
+    }
+    getList()
+  },[])
+
+  const [reqData ,setReqData] = useState({
+    status:'',
+    channel_id:'',
+    begin_pubdata:'',
+    end_pubdata:'',
+    page:1,
+    per_page:4
+  })
+
+  const onFinish = (fromValue) => {
+    console.log(fromValue)
+  }
+
+
+
   return (
     <div>
       <Card
@@ -92,7 +127,7 @@ const Article = () => {
         }
         style={{ marginBottom: 20 }}
       >
-        <Form initialValues={{ status: '' }}>
+        <Form initialValues={{ status: '' }} onFinish={onFinish}>
           <Form.Item label="狀態" name="status">
             <Radio.Group>
               <Radio value={''}>全部</Radio>
@@ -101,14 +136,13 @@ const Article = () => {
             </Radio.Group>
           </Form.Item>
 
-          <Form.Item label="頻道" name="channel_id">
+          <Form.Item label="分類" name="channel_id">
             <Select
               placeholder="請選擇文章頻道"
-              defaultValue="lucy"
+              defaultValue="選擇"
               style={{ width: 120 }}
             >
-              <Option value="jack">Jack</Option>
-              <Option value="lucy">Lucy</Option>
+              {channelList.map(item=><Option key={item.id} value="item.id">{item.name}</Option>)}
             </Select>
           </Form.Item>
 
@@ -124,8 +158,8 @@ const Article = () => {
           </Form.Item>
         </Form>
       </Card>
-      <Card title={`根據篩選條件共查詢到 count 條結果：`}>
-        <Table rowKey="id" columns={columns} dataSource={data} />
+      <Card title={`根據篩選條件共查詢到 ${count} 條結果：`}>
+        <Table rowKey="id" columns={columns} dataSource={list} />
       </Card>
     </div>
   )
